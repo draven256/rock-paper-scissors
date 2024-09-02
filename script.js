@@ -10,49 +10,54 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let choice;
-  do {
-    choice = prompt("Rock, paper or scissors?").toLowerCase();
-  } while ((choice !== "rock" && choice !== "paper" && choice !== "scissors"));
+function playRound(humanChoice, computerChoice) {
+  results.textContent = ``;
+  results.textContent +=
+    "Human chose: " +
+    humanChoice +
+    "\nComputer chose: " +
+    computerChoice +
+    "\n";
 
-  return choice;
+  if (
+    (humanChoice === "rock" && computerChoice === "scissors") ||
+    (humanChoice === "paper" && computerChoice === "rock") ||
+    (humanChoice === "scissors" && computerChoice === "paper")
+  ) {
+    humanScore++;
+    results.textContent += "Human won this round!\n";
+  } else if (humanChoice === computerChoice) {
+    results.textContent += "Draw!\n";
+  } else {
+    computerScore++;
+    results.textContent += "Computer won this round!\n";
+  }
+
+  results.textContent +=
+    "Current score:\nHuman: " +
+    humanScore +
+    "\nComputer: " +
+    computerScore +
+    "\n";
+
+  if (humanScore === 5 || computerScore === 5) {
+    results.textContent +=
+      humanScore === 5
+        ? "Human has won the game!"
+        : "Computer has won the game!";
+    humanScore = 0;
+    computerScore = 0;
+  }
 }
+
+const results = document.querySelector("#results-div");
+results.setAttribute("style", "white-space: pre");
 
 let humanScore = 0;
 let computerScore = 0;
 
-function playGame() {
-  function playRound(humanChoice, computerChoice) {
-    console.clear();
-    console.log(`Human chose: ${humanChoice}
-    Computer chose: ${computerChoice}`);
-    if (
-      (humanChoice === "rock" && computerChoice === "scissors") ||
-      (humanChoice === "paper" && computerChoice === "rock") ||
-      (humanChoice === "scissors" && computerChoice === "paper")
-    ) {
-      humanScore++;
-      console.log("Human won this round!");
-    } else if (humanChoice === computerChoice) {
-      console.log("Draw!");
-    } else {
-      computerScore++;
-      console.log("Computer won this round!");
-    }
+const selection = document.querySelector("#selection-div");
 
-    console.log(`Current score: 
-    Human: ${humanScore}
-    Computer: ${computerScore}`);
-  }
-
-  for (let i = 0; i < 5; i++) {
-    console.log(`Round ${i + 1}:`);
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-
-    playRound(humanSelection, computerSelection);
-  }
-}
-
-playGame();
+selection.addEventListener("click", (event) => {
+  playRound(event.target.id, getComputerChoice());
+});
